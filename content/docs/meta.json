@@ -2,7 +2,7 @@
   "title": "Docs",
   "pages": [
     "index",
-    "sdk/...",
-    "agent/..."
+    "sdk",
+    "agent"
   ]
 }

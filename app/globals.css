@@ -1,5 +1,12 @@
 @import "tailwindcss";
-@import "fumadocs-ui/css/ocean.css";
+@import "fumadocs-ui/css/neutral.css";
 @import "fumadocs-ui/css/preset.css";
 
 @source "../node_modules/fumadocs-ui/dist/**/*.js";
+
+/* Dark theme with golden/yellow accents */
+.dark {
+  --color-fd-primary: hsl(45, 90%, 65%);
+  --color-fd-primary-foreground: hsl(0, 0%, 4%);
+  --color-fd-ring: hsl(45, 90%, 65%);
+}

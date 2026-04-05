@@ -1,0 +1,75 @@
+---
+title: Tools
+description: All MCP tools available to AI agents.
+---
+
+## browse(url)
+
+Pay for and retrieve content from a URL. Handles the full x402 payment flow automatically.
+
+```
+> browse https://shop-cannes.vercel.app/products/1
+[proactive] Paid 0.002000 USDC | TX: a3f1b2c4-...
+
+# Nike Air Max 90
+**Price:** $129.99 | **Rating:** 4.5/5
+...
+```
+
+- Tries proactive flow first (1 HTTP request), falls back to reactive (2 requests)
+- Results are cached — browsing the same URL twice returns the cached content
+- Respects the session budget set via `set_budget()`
+
+## peek(url)
+
+Check the price of a URL without paying.
+
+```
+> peek https://demo-chef.vercel.app/recipes/5
+Price: 0.002 USDC
+Network: eip155:5042002
+Pay to: 0xfC2a...B566
+Scheme: GatewayWalletBatched
+```
+
+Returns "This URL is free" if no payment is required.
+
+## get_balance()
+
+Check wallet balances and session spending.
+
+```
+> get_balance
+Wallet (on-chain): 18.994 USDC
+Gateway available:  0.972 USDC
+Gateway total:      0.972 USDC
+Session spend:      0.003000 USDC
+Budget remaining:   unlimited
+Address: 0x2df7...Dc3E8
+Chain:   arcTestnet
+```
+
+## set_budget(max_usd)
+
+Set a USDC spending cap for this session. `browse()` will refuse once the cap is reached.
+
+```
+> set_budget 0.05
+Budget: 0.05 USDC | Spent: 0.003000 | Remaining: 0.047000 USDC
+```
+
+## get_receipts()
+
+List all payments made this session.
+
+```
+> get_receipts
+3 payments | 0.005000 USDC total
+
+1. https://demo-chef.vercel.app/recipes/3
+   0.002000 USDC | TX: a3f1b2c4-... | 2026-04-05T10:30:00Z
+2. https://shop-cannes.vercel.app/products/1
+   0.002000 USDC | TX: b7e2d1f9-... | 2026-04-05T10:31:00Z
+3. https://demo-hire.vercel.app/jobs/42
+   0.001000 USDC | TX: c9a3e5b2-... | 2026-04-05T10:32:00Z
+```

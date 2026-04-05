@@ -1,0 +1,43 @@
+---
+title: Pricing
+description: Set per-route prices, free routes, and default pricing.
+---
+
+## Per-Route Pricing
+
+Set different prices for different sections of your site. The longest matching prefix wins.
+
+```typescript
+pricing: {
+  '/products': 0.002,    // $0.002 per product page
+  '/blog':     0.001,    // $0.001 per blog post
+  '/api/data': 0.005,    // $0.005 for API endpoints
+}
+```
+
+When a crawler visits `/products/shoes/nike-air`, it matches `/products` and pays `$0.002`.
+
+## Default Price
+
+Pages that don't match any prefix in `pricing` use the `defaultPrice`:
+
+```typescript
+defaultPrice: 0.001  // $0.001 — the default if omitted
+```
+
+## Free Routes
+
+Routes that bypass payment, even for crawlers:
+
+```typescript
+freeRoutes: ['/', '/about', '/pricing', '/contact']
+```
+
+Free routes are useful for landing pages, marketing content, and pages that help crawlers discover your paid content.
+
+## Discovery
+
+The SDK auto-serves two discovery endpoints:
+
+- **`/robots.txt`** — includes payment metadata so smart agents can pay proactively (1 request instead of 2)
+- **`/.well-known/ai-pay`** — structured JSON manifest with routes, prices, and volume tier info

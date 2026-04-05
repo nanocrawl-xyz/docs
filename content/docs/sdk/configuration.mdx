@@ -1,0 +1,78 @@
+---
+title: Configuration
+description: Full reference for all SDK options.
+---
+
+## All Options
+
+```typescript
+withNanocrawl({
+  // Required
+  sellerWallet: '0x...',
+
+  // Pricing
+  pricing: { '/blog': 0.001, '/products': 0.002 },
+  defaultPrice: 0.001,
+  freeRoutes: ['/', '/about'],
+
+  // Volume discounts
+  volumeTiers: [
+    { after: 10, discount: 0.20 },
+    { after: 50, discount: 0.40 },
+  ],
+
+  // Storage
+  redisUrl: process.env.REDIS_URL,
+  store: myCustomPaymentStore,
+
+  // Advanced
+  gatewayUrl: 'https://gateway-api-testnet.circle.com',
+})
+```
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `sellerWallet` | `string` | *required* | Your EVM wallet address |
+| `redisUrl` | `string` | `process.env.REDIS_URL` | Redis connection URL |
+| `pricing` | `Record<string, number>` | — | Per-route prices in USDC |
+| `defaultPrice` | `number` | `0.001` | Fallback price for unlisted routes |
+| `freeRoutes` | `string[]` | `[]` | Routes that bypass payment |
+| `volumeTiers` | `VolumeTier[]` | `[]` | Volume discounts |
+| `store` | `PaymentStore` | — | Custom payment store (overrides Redis) |
+| `gatewayUrl` | `string` | Arc Testnet | Circle Gateway URL |
+
+## Environment Variables
+
+| Variable | Description |
+|----------|-------------|
+| `SELLER_WALLET` | Your EVM wallet address |
+| `REDIS_URL` | Redis connection URL (auto-detected by SDK) |
+
+## Custom Payment Store
+
+Implement the `PaymentStore` interface for any backend:
+
+```typescript
+import { withNanocrawl, type PaymentStore, type PaymentEvent } from 'nanocrawl-sdk'
+
+const myStore: PaymentStore = {
+  async push(event: PaymentEvent) { /* write to your DB */ },
+  async list(): Promise<PaymentEvent[]> { /* read from your DB */ },
+}
+
+export const proxy = withNanocrawl({
+  sellerWallet: process.env.SELLER_WALLET!,
+  store: myStore,
+})
+```
+
+## Bot Detection
+
+The SDK uses multi-signal classification to distinguish humans from crawlers:
+
+- Known bot user-agents (GPTBot, Claude, curl, wget, Scrapy, etc.)
+- Cooperative headers (`x-nanocrawl-capable`, `payment-signature`)
+- Missing browser headers (`accept-language`, `sec-fetch-dest`)
+- Short or empty user-agent strings
+
+Humans are never affected.

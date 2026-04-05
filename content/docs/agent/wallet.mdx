@@ -1,0 +1,43 @@
+---
+title: Wallet
+description: Auto-generated wallet management and funding.
+---
+
+## Auto-Generated Wallet
+
+On first run, the MCP server generates a wallet and stores it at:
+
+```
+~/.nanocrawl/wallet.json
+```
+
+The file has owner-only permissions (`0600`). No private key ever appears in commands, env vars, or config files.
+
+## Funding
+
+The wallet needs USDC on Arc Testnet to pay for content.
+
+1. Run `npx nanocrawl` to see your wallet address
+2. Go to [faucet.circle.com](https://faucet.circle.com)
+3. Select **Arc Testnet**
+4. Paste your wallet address
+5. Request USDC
+
+## Gateway Deposits
+
+The MCP server manages Gateway deposits automatically:
+
+- On first `browse()`, it checks the Gateway balance
+- If low, it deposits from the on-chain wallet (default: 1 USDC)
+- Subsequent payments draw from the Gateway balance
+- No manual deposit management needed
+
+## Using an Existing Key
+
+To use a specific private key instead of the auto-generated wallet:
+
+```bash
+export NANOCRAWL_BUYER_PRIVATE_KEY=0xYourPrivateKey
+```
+
+This takes priority over `~/.nanocrawl/wallet.json`.

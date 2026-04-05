@@ -1,0 +1,55 @@
+---
+title: Quick Start
+description: Add pay-per-crawl to your Next.js site in 5 minutes.
+---
+
+## Install
+
+```bash
+npm install nanocrawl-sdk
+```
+
+## Setup
+
+Create one file in your Next.js project root:
+
+```typescript title="proxy.ts"
+// Next.js 16+  (use middleware.ts for Next.js 14-15)
+import { withNanocrawl } from 'nanocrawl-sdk'
+
+export const proxy = withNanocrawl({
+  sellerWallet: process.env.SELLER_WALLET,
+  redisUrl: process.env.REDIS_URL,
+
+  pricing: { '/blog': 0.001, '/products': 0.002 },
+  defaultPrice: 0.001,
+  freeRoutes: ['/', '/about'],
+
+  volumeTiers: [
+    { after: 10, discount: 0.20 },
+    { after: 50, discount: 0.40 },
+  ],
+})
+
+export const config = { matcher: ['/((?!_next|favicon).*)'] }
+```
+
+## Environment Variables
+
+```bash title=".env.local"
+SELLER_WALLET=0xYourWalletAddress
+REDIS_URL=rediss://default:token@your-instance.upstash.io:6379
+```
+
+Get a free Redis URL from [console.upstash.com](https://console.upstash.com).
+
+## Deploy
+
+Push to Vercel with `SELLER_WALLET` and `REDIS_URL` set in your project environment variables. That's it — AI crawlers now pay you per page.
+
+## What Happens
+
+1. **Humans** browse your site normally — zero friction, no paywall.
+2. **AI crawlers** get a `402 Payment Required` response with pricing info.
+3. Crawlers pay via Circle Nanopayments (gas-free USDC).
+4. Your content is served. Revenue appears on the dashboard at `/nanocrawl`.

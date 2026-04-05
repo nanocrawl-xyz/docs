@@ -1,0 +1,41 @@
+---
+title: Dashboard
+description: Built-in revenue dashboard with wallet auth and withdrawals.
+---
+
+The SDK serves a full dashboard at `/nanocrawl` on your site. No extra pages or API routes to add.
+
+## Access
+
+Visit `https://your-site.com/nanocrawl` and connect MetaMask with your seller wallet.
+
+## What You See
+
+- **Lifetime Earned** — total USDC earned (balance + withdrawn)
+- **Gateway Balance** — funds available for withdrawal
+- **Total Revenue** — sum of all crawler payments
+- **Payment Count** — number of paid page views
+- **Top Paying Agents** — ranked by total spend
+- **Revenue by Route** — which pages earn the most
+- **Payment History** — payer address, page, amount, settlement link
+- **Withdrawal History** — chain, amount, transaction link
+
+## Withdrawals
+
+Withdraw earnings to your wallet with one click:
+
+1. Enter an amount (or click **Max**)
+2. Select a destination chain:
+   - **Arc Testnet** — instant, USDC is the gas token
+   - **Base Sepolia** — via CCTP (requires Sepolia ETH for gas)
+   - **Arbitrum Sepolia** — via CCTP
+   - **Optimism Sepolia** — via CCTP
+3. Click **Withdraw** — MetaMask signs the BurnIntent
+4. The SDK handles Circle Gateway transfer + on-chain mint
+
+## Storage
+
+| Mode | When | Notes |
+|------|------|-------|
+| **Redis** | `REDIS_URL` is set | Shared across all function instances — required for production |
+| **In-memory** | No Redis | Per-instance only — fine for local dev |

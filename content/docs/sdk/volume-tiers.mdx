@@ -1,0 +1,41 @@
+---
+title: Volume Discounts
+description: Reward bots that crawl more pages with automatic discounts.
+---
+
+The more pages a bot crawls, the cheaper each page gets. This encourages comprehensive crawling of your content — good for you (more revenue, more visibility in AI responses) and good for the agent (lower cost per page).
+
+## Configuration
+
+```typescript
+volumeTiers: [
+  { after: 10,  discount: 0.20 },  // 20% off after 10 pages
+  { after: 50,  discount: 0.40 },  // 40% off after 50 pages
+  { after: 100, discount: 0.60 },  // 60% off after 100 pages
+]
+```
+
+## How It Works
+
+- Page counts are tracked **per wallet address** in Redis
+- Discounts apply automatically — the bot doesn't need to do anything
+- The highest qualifying tier is applied (a bot with 75 pages gets 40% off, not 20%)
+
+## Price Calculation
+
+With `defaultPrice: 0.001` and the tiers above:
+
+| Pages crawled | Discount | Price per page |
+|--------------|----------|---------------|
+| 1-10 | 0% | $0.001 |
+| 11-50 | 20% | $0.0008 |
+| 51-100 | 40% | $0.0006 |
+| 101+ | 60% | $0.0004 |
+
+## Agent Discovery
+
+Tiers are advertised in `/.well-known/ai-pay` so agents can plan their budget before crawling. Agents that send the `X-Nanocrawl-Wallet` header get their discounted price in the 402 response.
+
+## Requirements
+
+Volume tiers require **Redis** for accurate tracking across function instances. Without Redis, counts are per-instance only (fine for development).

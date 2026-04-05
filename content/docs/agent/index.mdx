@@ -1,0 +1,54 @@
+---
+title: Quick Start
+description: Give any AI agent a wallet to browse paid web content.
+---
+
+The NanoCrawl MCP server lets AI agents pay for web content automatically. The agent calls `browse(url)` and gets content back — payment is handled behind the scenes.
+
+## Install & Setup
+
+**1. Run once** to generate your wallet:
+
+```bash
+npx nanocrawl
+```
+
+This creates a wallet at `~/.nanocrawl/wallet.json` and prints the address.
+
+**2. Fund the wallet** at [faucet.circle.com](https://faucet.circle.com) (select Arc Testnet, paste the address).
+
+**3. Add to Claude Code:**
+
+```bash
+claude mcp add nanocrawl -- npx nanocrawl
+```
+
+**4. Start browsing:**
+
+```
+> browse https://demo-chef.vercel.app/recipes/3
+> What's the current price of ETH? (browse https://coin-cannes.vercel.app/coins/ethereum)
+```
+
+## Payment Flow
+
+```
+Agent calls browse(url)
+    |
+    +-- Proactive flow (1 request):
+    |   Reads robots.txt -> signs payment -> sends with first request
+    |
+    +-- Reactive flow (2 requests):
+        GET url -> 402 + pricing -> signs payment -> retries
+    |
+    v
+Content returned. Payment settled via Circle Gateway (gas-free).
+```
+
+The server tries the **proactive flow** first — reading `robots.txt` for payment metadata and attaching payment on the first request. If unavailable, it falls back to the standard 402 flow.
+
+## Removing
+
+```bash
+claude mcp remove nanocrawl
+```

@@ -1,0 +1,43 @@
+---
+title: Introduction
+description: NanoCrawl — an HTTP-native micropayment protocol for AI data access.
+---
+
+NanoCrawl lets **content providers earn** when AI agents access their content and **AI agents pay** for web data — all through gas-free USDC micropayments.
+
+Humans always browse for free. Only AI crawlers pay.
+
+## Two Packages
+
+| Package | Who uses it | What it does |
+|---------|------------|--------------|
+| [**nanocrawl-sdk**](/docs/sdk) | Content providers | Add a paywall + dashboard to any Next.js site |
+| [**nanocrawl**](/docs/agent) | AI agents | MCP server that gives agents a wallet to browse paid content |
+
+## How It Works
+
+```
+Human   → browses your site normally (zero friction)
+AI Bot  → gets 402 Payment Required
+AI Bot  → pays via Circle Nanopayments (gas-free USDC)
+AI Bot  → gets the page content
+You     → earn USDC per page view
+```
+
+Payments settle through [Circle's Nanopayments Gateway](https://developers.circle.com/gateway/nanopayments) — gas-free USDC on the Arc network. No gas fees, no token approvals, sub-cent economics.
+
+## Live Demo Sites
+
+Try browsing these with the NanoCrawl MCP server:
+
+- [ShopCrawl](https://shop-cannes.vercel.app) — Product catalog ($0.002/page)
+- [HireCrawl](https://demo-hire.vercel.app) — Job board with volume discounts ($0.001/page)
+- [ChefCrawl](https://demo-chef.vercel.app) — Recipe site ($0.002/recipe)
+- [CoinCrawl](https://coin-cannes.vercel.app) — Live crypto prices ($0.005/coin)
+
+## Links
+
+- [NanoCrawl Landing](https://nanocrawl.xyz)
+- [GitHub](https://github.com/nanocrawl-xyz)
+- [npm: nanocrawl-sdk](https://www.npmjs.com/package/nanocrawl-sdk)
+- [npm: nanocrawl](https://www.npmjs.com/package/nanocrawl)
